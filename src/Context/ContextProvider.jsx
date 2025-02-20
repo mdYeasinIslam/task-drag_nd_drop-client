@@ -55,7 +55,7 @@ export const ContextProvider = ({ children }) => {
         })
         return ()=> unSubscribe()
     }, [])
-    console.log(user)
+    // console.log(user)
     const info = {
         user,
         loading,

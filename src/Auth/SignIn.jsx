@@ -1,15 +1,41 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import toast from 'react-hot-toast';
+import { useAxiosPublic } from '../hooks/useAxiosPublic';
 
 export const SignIn = () => {
-    
+      const { signInAuth,googleAuth } = useAuth()
+    const navigate = useNavigate()
+    const axiosPublic =useAxiosPublic()
     const handleSubmit = (e) => {
         e.preventDefault()
         const email = e.target?.email.value;
         const password = e.target?.password.value;
-        console.log(email,password)
+        
+        signInAuth(email, password)
+            .then(async (res) => {
+                toast.success('You are log in succefully')
+                navigate('/')
+        }).catch(e => {
+        toast.error(e.message)
+        console.log(e)
+    })
     }
-
+    const handleGoogle = () => {
+        googleAuth()
+            .then(async (res) => {
+                const user = res?.user
+                const info = {name:user?.displayName,email:user?.email}
+                const response = await axiosPublic.post('/usersInfo', info)
+                console.log(response)
+                toast.success('You are log in succefully')
+                navigate('/')
+            }).catch(e => {
+                toast.error(e.message)
+                console.log(e)
+            })  
+    }
   return (
    <div className="hero bg-base-200 min-h-screen">
   <div className="hero-content flex-col md:flex-row ">
@@ -33,12 +59,15 @@ export const SignIn = () => {
           <input type="password" name='password' placeholder="password" className="input input-bordered" required />
         </div>
         <div className="form-control mt-6 w-full">
-          <button className="btn btn-primary w-full">Login</button>
+          <button className="btn btn-primary w-full" type='submit'>Login</button>
         </div>
       </form>
-        <label className="label">
+       <div className=" max-w-5/6 mx-auto">
+          <button onClick={handleGoogle} className="btn btn-accent w-full ">Login with Google</button>
+        <label className="">
             <Link to='/signUp' className="label-text-alt link link-hover">Don't have any account? Please create an account</Link>
         </label>
+        </div>
       
     </div>
   </div>

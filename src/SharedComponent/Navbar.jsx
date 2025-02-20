@@ -1,13 +1,19 @@
-import { Link, NavLink } from "react-router-dom"
+import { Link, NavLink, useNavigate } from "react-router-dom"
 import { useAuth } from "../hooks/useAuth"
+import toast from "react-hot-toast"
 
 export const Navbar = () => {
   const { user, signOutAuth } = useAuth()
+  const navigate =useNavigate()
   const handleSignOut = () => {
     signOutAuth()
-      .then(() => { console.log('sign-out successful') })
+      .then(() => {
+        toast.success('sign-out successful')
+        navigate('/signIn')
+      })
       .catch(e => {
-      console.log(e)
+        toast.error(e.message)
+        console.log(e)
     })
   }
   return (
@@ -36,7 +42,7 @@ export const Navbar = () => {
       {
         user?.email ?
         <>
-        <button className="btn btn-sm btn-outline btn-primary">Log Out</button>
+        <button onClick={handleSignOut} className="btn btn-sm btn-outline btn-primary">Log Out</button>
         </>
         :
         <>
@@ -50,7 +56,7 @@ export const Navbar = () => {
       }
     </div>
     <div className="w-12 rounded-full">
-          <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+          <img src={user?.email ? user?.photoURL:'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'}
           className="rounded-full"/>
     </div>
   </div>

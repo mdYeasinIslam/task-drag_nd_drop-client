@@ -1,23 +1,29 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import toast from 'react-hot-toast';
+import { useAxiosPublic } from '../hooks/useAxiosPublic';
 
 export const SignUp = () => {
   const { signUpAuth, updateUserAuth } = useAuth()
+  const axiosPublic =useAxiosPublic()
   const navigate = useNavigate()
     const handleSubmit = (e) => {
         e.preventDefault()
-        const Name = e.target?.name.value;
+        const name = e.target?.name.value;
         const email = e.target?.email.value;
         const password = e.target?.password.value;
-      console.log(email, password)
+    
       signUpAuth(email, password)
-        .then(res => {
-          console.log(res.user)
+        .then(async(res) => {
+           const info ={name,email}
+            const response = await axiosPublic.post('/usersInfo',info)
+            console.log(response)
           navigate('/')
-        }).catch(e => {
+        }) .catch(e => {
+        toast.error(e.message)
         console.log(e)
-      })
+    })
     }
 
   return (
@@ -52,7 +58,7 @@ export const SignUp = () => {
           <button className="btn btn-primary w-full" type='submit'>Register</button>
         </div>
       </form>
-           <label className="label">
+           <label className="">
             <Link to='/signIn' className="label-text-alt link link-hover">Already have an account? Please Log In.</Link>
         </label>
     </div>

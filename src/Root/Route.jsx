@@ -2,8 +2,9 @@ import React from 'react'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import { Main } from '../Layout/Main'
 import { SignIn } from '../Auth/SignIn'
-import { SingUp } from '../Auth/SingUp'
+import { SignUp } from '../Auth/SingUp'
 import { Home } from '../Pages/Home/Home'
+import { PrivateRoot } from './PrivateRoot'
 export const Route = () => {
     const routes = createBrowserRouter([
         {
@@ -12,7 +13,7 @@ export const Route = () => {
             children: [
                 {
                     path: '/',
-                    element:<Home/>
+                    element:<PrivateRoot><Home/></PrivateRoot>
                 },
             ]
         },
@@ -22,7 +23,7 @@ export const Route = () => {
         },
         {
             path: '/signUp',
-            element:<SingUp/>
+            element:<SignUp/>
         }
 
     ])

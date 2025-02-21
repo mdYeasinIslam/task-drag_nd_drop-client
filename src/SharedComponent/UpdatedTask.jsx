@@ -1,10 +1,10 @@
 
-import toast from "react-hot-toast"
 import useTask from "../hooks/useTask"
-export const AddTask = () => {
-  const {addTask} =useTask()
+export const UpdatedTask = ({modalRef,selectedTask,closeModal}) => {
+  const {tasks,addTask} =useTask()
 
-  const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
+      
     e.preventDefault()
     console.log('submit')
     const title = e.target?.title.value;
@@ -12,21 +12,19 @@ export const AddTask = () => {
     const date = e.target?.date.value
     const category = 'To-Do'
     const task = { title, details,date,category}
-    addTask(task)
-    toast.success('Task is successfully added')
-    e.target.reset()
-    document.getElementById("my_modal_5").close()
+
+    document.getElementById("my_modal_3").close()
   }
   return (
     <div>
-        <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+        <dialog ref={modalRef} id={`my_modal_3`} className="modal modal-bottom sm:modal-middle">
         <div className="modal-box text-left">
             <div className="flex justify-between items-center">
-              <h3 className="font-bold text-lg">Add Taks</h3>
+              <h3 className="font-bold text-lg">Update Taks Info</h3>
               <div className="modal-action">
                   <button
                     className="btn"
-                    onClick={() => document.getElementById("my_modal_5").close()}>
+                    onClick={closeModal}>
                     Close
                   </button> 
               </div>
@@ -39,6 +37,7 @@ export const AddTask = () => {
                         type="text"
                         placeholder="Task Title"
                         name="title"
+                        defaultValue={selectedTask?.title ?? ''}
                         required
                         className="input input-bordered input-primary w-full max-w-xs" />
                 </div>
@@ -47,6 +46,7 @@ export const AddTask = () => {
                     <input
                         type="text"
                         placeholder="Task Details"
+                        defaultValue={selectedTask?.details ?? ''}
                         name="details"
                         required
                         className="input input-bordered input-primary w-full max-w-xs" />
@@ -57,6 +57,7 @@ export const AddTask = () => {
                         type="date"
                         name="date"
                         required
+                        defaultValue={selectedTask?.date??  ''}
                         className="input input-bordered input-primary w-full max-w-xs" />
                 </div>
                 <button className="btn" type="submit">Submit </button>

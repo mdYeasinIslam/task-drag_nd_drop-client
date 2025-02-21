@@ -63,7 +63,7 @@ export const TaskProvider = ({ children }) => {
         ...task,
         uid: user.uid,
       });
-      toast.success("Task added successfully");
+        console.log(res)
       setTasks([...tasks, res.data]);
     } catch (err) {
       toast.error(err.message);
@@ -83,21 +83,21 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
-//   const deleteTask = async (id) => {
-//     try {
-//       await axiosPublic.delete(`tasks/${id}`);
-//       setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
-//     } catch (error) {
-//       console.error("Error deleting task:", error);
-//     }
-//   };
+  const deleteTask = async (id) => {
+    try {
+      await axiosPublic.delete(`tasks/${id}`);
+      setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  };
 
   const taskValue = {
     tasks,
       addTask,
     setTasks,
     updateTask,
-    // deleteTask,
+    deleteTask,
   };
   return (
     <TaskContext.Provider value={taskValue}>{children}</TaskContext.Provider>

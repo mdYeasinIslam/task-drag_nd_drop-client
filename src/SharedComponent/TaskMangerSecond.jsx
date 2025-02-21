@@ -4,14 +4,16 @@ import { AddTask } from "./AddTask";
 
 
 
-const TaskManger = () => {
+const TaskMangerSecond = () => {
   const { tasks, updateTask, setTasks } = useTask();
 
   const categories = ["To-Do", "In Progress", "Done"];
+    console.log(tasks)
   const handleDragEnd = (result) => {
     if (!result.destination) return;
 
     const { source, destination } = result;
+    console.log(destination)
     // Reordering within the same category
     if (source.droppableId === destination.droppableId) {
       const updatedTasks = [...tasks];  
@@ -87,4 +89,4 @@ const TaskManger = () => {
   );
 };
 
-export default TaskManger;
+export default TaskMangerSecond;

@@ -1,4 +1,4 @@
-import { TaskManger } from "../../SharedComponent/TaskManger"
+import TaskManger from "../../SharedComponent/TaskManger"
 
 export const Home = () => {
   return (

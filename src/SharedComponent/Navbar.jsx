@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom"
-import { useAuth } from "../hooks/useAuth"
 import toast from "react-hot-toast"
+import { useAuth } from "../hooks/useAuth"
 
 export const Navbar = () => {
   const { user, signOutAuth } = useAuth()
@@ -56,7 +56,7 @@ export const Navbar = () => {
       }
     </div>
     <div className="w-12 rounded-full">
-          <img src={user?.email ? user?.photoURL:'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'}
+          <img src={user?.email ? `${user?.photoURL ? user?.photoURL : '/images/auth/profile.png'}` :'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'}
           className="rounded-full"/>
     </div>
   </div>

@@ -2,66 +2,67 @@
 /* eslint-disable react/prop-types */
 import { createContext, useEffect, useState } from "react";
 
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
 import toast from "react-hot-toast";
-import { useAuth } from "../hooks/useAuth";
-import { useAxiosPublic } from "../hooks/useAxiosPublic";
 import { useAllTasks } from "../hooks/useAllTasks";
+import { useAxiosPublic } from "../hooks/useAxiosPublic";
+import { useAuth } from "../hooks/useAuth";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
   // const socket = io("http://localhost:5000");
-  const socket = io("https://task-drag-nd-drop-server.onrender.com", {
-    transports: ["websocket"], 
-   withCredentials: true,
-});
+//   const socket = io("https://task-drag-nd-drop-server.onrender.com", {
+//     transports: ["websocket"], 
+//    withCredentials: true,
+// });
 //   const socket = io("https://task-drag-nd-drop-server.vercel.app", {
 //     transports: ["websocket"], 
 //    withCredentials: true,
 // });
+const [taskData, , refetch] = useAllTasks()
   const { user } = useAuth();
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(taskData);
   const axiosPublic = useAxiosPublic();
-
- 
   // Fetch tasks from backend
+  const fetchTasks = async () => {
+    try {
+      const res = await axiosPublic.get(`/tasks?email=${user?.email}`);
+      setTasks(res.data);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
   useEffect(() => {
     if (!user?.uid) return;
-
-    const fetchTasks = async () => {
-      try {
-        const res = await axiosPublic.get(`/tasks?email=${user?.email}`);
-        setTasks(res.data);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-      }
-    };
+    // if (taskData) {
+    //   setTasks(taskData)
+    // }
 
     fetchTasks();
 
-    socket.on("taskAdded", (newTask) => {
-      setTasks((prevTasks) => [...prevTasks, newTask]);
-    });
+    // socket.on("taskAdded", (newTask) => {
+    //   setTasks((prevTasks) => [...prevTasks, newTask]);
+    // });
 
-    socket.on("taskUpdated", (updatedTask) => {
-      setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task._id === updatedTask._id ? { ...task, ...updatedTask } : task
-        )
-      );
-    });
+    // socket.on("taskUpdated", (updatedTask) => {
+    //   setTasks((prevTasks) =>
+    //     prevTasks.map((task) =>
+    //       task._id === updatedTask._id ? { ...task, ...updatedTask } : task
+    //     )
+    //   );
+    // });
 
-    socket.on("taskDeleted", (taskId) => {
-      setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
-    });
+    // socket.on("taskDeleted", (taskId) => {
+    //   setTasks((prevTasks) => prevTasks.filter((task) => task._id !== taskId));
+    // });
 
-    return () => {
-      socket.off("taskAdded");
-      socket.off("taskUpdated");
-      socket.off("taskDeleted");
-    };
+    // return () => {
+    //   socket.off("taskAdded");
+    //   socket.off("taskUpdated");
+    //   socket.off("taskDeleted");
+    // };
   }, [user]);
 
   // add task
@@ -72,7 +73,9 @@ export const TaskProvider = ({ children }) => {
         uid: user.uid,
       });
       toast.success('Task is successfully added')
-       setTasks([...tasks, res.data]);
+      setTasks([...tasks, res.data]);
+      fetchTasks();
+      // refetch()
 
     } catch (err) {
       toast.error(err.message);
@@ -87,6 +90,7 @@ export const TaskProvider = ({ children }) => {
           task._id === id ? { ...task, ...updates } : task
         )
       );
+      // refetch()
     } catch (error) {
       console.error("Error updating task:", error);
     }
@@ -96,6 +100,8 @@ export const TaskProvider = ({ children }) => {
     try {
       await axiosPublic.delete(`tasks/${id}`);
       setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
+      // fetchTasks();
+      // refetch()
     } catch (error) {
       console.error("Error deleting task:", error);
     }
@@ -107,6 +113,7 @@ export const TaskProvider = ({ children }) => {
     setTasks,
     updateTask,
     deleteTask,
+    fetchTasks
   };
   return (
     <TaskContext.Provider value={taskValue}>{children}</TaskContext.Provider>

@@ -1,9 +1,11 @@
 
-import toast from "react-hot-toast"
 import useTask from "../hooks/useTask"
 import { useAuth } from "../hooks/useAuth"
+import { useAllTasks } from "../hooks/useAllTasks"
 export const AddTask = () => {
-  const {addTask} =useTask()
+  const { addTask } = useTask()
+    // const [taskData, , refetch] = useAllTasks()
+  
 const {user} =useAuth()
   const handleSubmit = async(e) => {
     e.preventDefault()
@@ -11,10 +13,11 @@ const {user} =useAuth()
     const details = e.target?.details.value;
     const date = e.target?.date.value
     const category = 'To-Do'
-    const userEmail = user?.email;
-    const userName =user?.dsplayName
+    const userEmail = user?.email
+    const userName = user?.dsplayName
     const task = { title, details,date,category,userEmail,userName}
     addTask(task)
+    // refetch()
     e.target.reset()
     document.getElementById("my_modal_5").close()
   }

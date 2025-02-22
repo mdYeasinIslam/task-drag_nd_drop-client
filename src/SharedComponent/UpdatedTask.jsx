@@ -1,18 +1,21 @@
 import _ from "lodash";
-import useTask from "../hooks/useTask";
 import toast from "react-hot-toast";
+import useTask from "../hooks/useTask";
+import { useAxiosPublic } from "../hooks/useAxiosPublic";
 
-export const UpdatedTask = ({modalRef,selectedTask,closeModal}) => {
-  const {updateTask} =useTask()
+export const UpdatedTask = ({ modalRef, selectedTask, closeModal }) => {
+  const{fetchTasks} =useTask()
+  const axiosPublic =useAxiosPublic()
     const handleSubmit = async (e) => {
     e.preventDefault()
     const title = e.target?.title.value;
     const details = e.target?.details.value;
     const date = e.target?.date.value
     const category = 'To-Do'
-    const task = { title, details,date,category}
+      const task = { title, details, date, category }
       if (title !== selectedTask.title || details !== selectedTask.details || date !== selectedTask.date) {
-        updateTask(selectedTask._id, task)
+        await axiosPublic.put(`/taskUpdate/${selectedTask._id}`, task)
+        fetchTasks()
         closeModal()
         toast.success('Updation successfull')
       }

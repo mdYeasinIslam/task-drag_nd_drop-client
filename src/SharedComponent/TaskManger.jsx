@@ -1,11 +1,13 @@
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
-import useTask from "../hooks/useTask";
 import { AddTask } from "./AddTask";
 import { MdDelete } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 import toast from "react-hot-toast";
 import { useRef, useState } from "react";
 import { UpdatedTask } from "./UpdatedTask";
+import { useAllTasks } from "../hooks/useAllTasks";
+import { useAxiosPublic } from "../hooks/useAxiosPublic";
+import useTask from "../hooks/useTask";
 
 
 
@@ -13,12 +15,61 @@ const TaskManger = () => {
   const { tasks,deleteTask, updateTask, setTasks } = useTask();
   const [selectedTask, setSelectedTask] = useState(null);
   const modalRef = useRef(null);
-    
+    const axiosPublic=useAxiosPublic()
   const categories = ["To-Do", "In Progress", "Done"];
+console.log(tasks)
+  const [taskData] = useAllTasks()
+  // setTasks(taskData)
+  // console.log(taskData)
+ 
   const handleDragEnd = (result) => {
     if (!result.destination) return;
 
+    // const fromStatus = result.source.droppableId;
+    // const toStatus = result.destination.droppableId;
+    // const taskId = result.draggableId;
+    // const oldIndex = result.source.index;
+    // const newIndex = result.destination.index;
+    // let updatedTasks = [...tasks?.map((task) => ({ ...task }))];
+
+    //     if (fromStatus === toStatus) {
+    //       // Find and remove the moved task
+    //       const movedTask = updatedTasks.find((task) => task._id === taskId);
+    //       updatedTasks = updatedTasks.filter((task) => task._id !== taskId);
+
+    //       // Insert task into the new position
+    //       updatedTasks.splice(newIndex, 0, movedTask);
+    //     } else {
+    //       // Find the dragged task and update its category
+    //       updatedTasks = updatedTasks.map((task) =>
+    //         task._id === taskId ? { ...task, category: toStatus } : task
+    //       );
+    //     }
+    //       // Optimistically update the UI
+    //       setTasks(updatedTasks);
+
+    //       // Send request to update backend
+    //       axiosPublic
+    //         .put("/reOrder", {
+    //           taskId,
+    //           newCategory: toStatus,
+    //           oldCategory: fromStatus,
+    //           newIndex,
+    //           oldIndex,
+    //         })
+    //         .catch((err) => {
+    //           toast.error(`Error updating task order: ${err.message}`);
+    //           // Revert changes if API request fails
+    //           setTasks(tasks);
+    //         });
+        
+
+
+
+
+    // ===========================================
     const { source, destination } = result;
+
     // Reordering within the same category
     if (source.droppableId === destination.droppableId) {
       const updatedTasks = [...tasks];  
@@ -136,8 +187,8 @@ const TaskManger = () => {
                                     >
                                     <div className="flex justify-between">
                                         <div>
-                                            <h3 className='font-bold'>{task.title}</h3>
-                                            <p className='text-sm'>{task.details}</p>
+                                            <h3 className='font-bold'>{task?.title}</h3>
+                                            <p className='text-sm'>{task?.details}</p>
                                         </div>
                                         <div className="flex ">
                                             <button 

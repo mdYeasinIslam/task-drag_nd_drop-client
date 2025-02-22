@@ -4,7 +4,6 @@ import { useAuth } from "../hooks/useAuth"
 import { useAllTasks } from "../hooks/useAllTasks"
 export const AddTask = () => {
   const { addTask } = useTask()
-    // const [taskData, , refetch] = useAllTasks()
   
 const {user} =useAuth()
   const handleSubmit = async(e) => {
@@ -17,7 +16,6 @@ const {user} =useAuth()
     const userName = user?.dsplayName
     const task = { title, details,date,category,userEmail,userName}
     addTask(task)
-    // refetch()
     e.target.reset()
     document.getElementById("my_modal_5").close()
   }

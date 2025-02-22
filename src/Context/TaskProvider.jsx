@@ -13,6 +13,7 @@ export const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
   // const socket = io("http://localhost:5000");
+
 //   const socket = io("https://task-drag-nd-drop-server.onrender.com", {
 //     transports: ["websocket"], 
 //    withCredentials: true,
@@ -21,10 +22,10 @@ export const TaskProvider = ({ children }) => {
 //     transports: ["websocket"], 
 //    withCredentials: true,
 // });
-const [taskData, , refetch] = useAllTasks()
   const { user } = useAuth();
-  const [tasks, setTasks] = useState(taskData);
+  const [tasks, setTasks] = useState([]);
   const axiosPublic = useAxiosPublic();
+
   // Fetch tasks from backend
   const fetchTasks = async () => {
     try {
@@ -36,9 +37,6 @@ const [taskData, , refetch] = useAllTasks()
   };
   useEffect(() => {
     if (!user?.uid) return;
-    // if (taskData) {
-    //   setTasks(taskData)
-    // }
 
     fetchTasks();
 
@@ -75,7 +73,6 @@ const [taskData, , refetch] = useAllTasks()
       toast.success('Task is successfully added')
       setTasks([...tasks, res.data]);
       fetchTasks();
-      // refetch()
 
     } catch (err) {
       toast.error(err.message);
@@ -90,7 +87,6 @@ const [taskData, , refetch] = useAllTasks()
           task._id === id ? { ...task, ...updates } : task
         )
       );
-      // refetch()
     } catch (error) {
       console.error("Error updating task:", error);
     }
@@ -100,8 +96,6 @@ const [taskData, , refetch] = useAllTasks()
     try {
       await axiosPublic.delete(`tasks/${id}`);
       setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
-      // fetchTasks();
-      // refetch()
     } catch (error) {
       console.error("Error deleting task:", error);
     }

@@ -1,19 +1,20 @@
 
 import toast from "react-hot-toast"
 import useTask from "../hooks/useTask"
+import { useAuth } from "../hooks/useAuth"
 export const AddTask = () => {
   const {addTask} =useTask()
-
+const {user} =useAuth()
   const handleSubmit = async(e) => {
     e.preventDefault()
-    console.log('submit')
     const title = e.target?.title.value;
     const details = e.target?.details.value;
     const date = e.target?.date.value
     const category = 'To-Do'
-    const task = { title, details,date,category}
+    const userEmail = user?.email;
+    const userName =user?.dsplayName
+    const task = { title, details,date,category,userEmail,userName}
     addTask(task)
-    toast.success('Task is successfully added')
     e.target.reset()
     document.getElementById("my_modal_5").close()
   }

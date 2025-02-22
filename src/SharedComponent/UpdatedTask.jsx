@@ -1,19 +1,24 @@
+import _ from "lodash";
+import useTask from "../hooks/useTask";
+import toast from "react-hot-toast";
 
-import useTask from "../hooks/useTask"
 export const UpdatedTask = ({modalRef,selectedTask,closeModal}) => {
-  const {tasks,addTask} =useTask()
-
+  const {updateTask} =useTask()
     const handleSubmit = async (e) => {
-      
     e.preventDefault()
-    console.log('submit')
     const title = e.target?.title.value;
     const details = e.target?.details.value;
     const date = e.target?.date.value
     const category = 'To-Do'
     const task = { title, details,date,category}
-
-    document.getElementById("my_modal_3").close()
+      if (title !== selectedTask.title || details !== selectedTask.details || date !== selectedTask.date) {
+        updateTask(selectedTask._id, task)
+        closeModal()
+        toast.success('Updation successfull')
+      }
+      else {
+        toast('Please change some thing')
+      }
   }
   return (
     <div>

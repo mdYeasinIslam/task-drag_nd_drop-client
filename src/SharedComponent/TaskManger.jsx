@@ -14,7 +14,6 @@ const TaskManger = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const modalRef = useRef(null);
     
-    
   const categories = ["To-Do", "In Progress", "Done"];
   const handleDragEnd = (result) => {
     if (!result.destination) return;
@@ -109,7 +108,7 @@ const TaskManger = () => {
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4 p-4'>
               
                 <DragDropContext onDragEnd={handleDragEnd}>
-                {categories.map((category,idx) => (
+                {categories?.map((category,idx) => (
                  <Droppable key={category} droppableId={category}>
                     {(provided) => (
                     <div
@@ -119,9 +118,10 @@ const TaskManger = () => {
                     >
                         <h2 className={`text-xl font-bold py-3 text-center  ${idx==0 &&'bg-violet-200'} ${idx == 1 && 'bg-sky-200'} ${idx==2 && 'bg-green-200'}`}>{category}</h2>
                         <div className="">
-                            {tasks
-                            .filter((task) => task.category === category)
-                            .map((task, index) => (
+                          {
+                            tasks?.length > 0 &&
+                            <>
+                            {tasks?.filter((task) => task.category === category)?.map((task, index) => (
                                 <Draggable
                                 key={task._id}
                                 draggableId={task._id}
@@ -139,7 +139,7 @@ const TaskManger = () => {
                                             <h3 className='font-bold'>{task.title}</h3>
                                             <p className='text-sm'>{task.details}</p>
                                         </div>
-                                        <div className="flex flex-col">
+                                        <div className="flex ">
                                             <button 
                                              onClick={() => openModal(task)}
                                             className="btn"> 
@@ -158,6 +158,8 @@ const TaskManger = () => {
                                 )}
                                 </Draggable>
                             ))}
+                            </>
+                          }
                         </div>
                         {provided.placeholder}
                     </div>
